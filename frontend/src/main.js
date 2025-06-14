@@ -1,5 +1,10 @@
 import './assets/main.css'
 
+/*This is the entry point of your Vue app. It:
+Initializes the Vue app
+Mounts it to a DOM element (usually #app)
+Imports and uses things like the router or store */
+
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'

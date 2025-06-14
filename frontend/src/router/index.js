@@ -1,3 +1,5 @@
+//This file defines your Vue Router configuration — the URLs and their corresponding components.
+
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 
