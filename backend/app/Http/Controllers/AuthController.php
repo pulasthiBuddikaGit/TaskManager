@@ -1,5 +1,8 @@
 <?php
 
+//namespace is important for autoloading the class without needing to include the file manually
+namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
