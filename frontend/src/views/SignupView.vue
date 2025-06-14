@@ -2,7 +2,7 @@
   <div class="container">
     <!-- Left side animation -->
     <div class="animation-box">
-      <img src="/animations/signup-task.gif" alt="Task Animation" class="animation" />
+      <img src="../assets/signup-task.gif" alt="Task Animation" class="animation" />
     </div>
 
     <!-- Right side form -->
@@ -36,17 +36,18 @@ export default {
 .animation-box {
   flex: 1;
   text-align: center;
+  max-width: 700px;
 }
 
 .animation {
   width: 100%;
-  max-width: 400px;
+  max-width: 600px;
   height: auto;
 }
 
 .form-box {
   flex: 1;
-  max-width: 400px;
+  max-width: 450px;
 }
 
 @media screen and (max-width: 1024px) {
