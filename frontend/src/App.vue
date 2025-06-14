@@ -1,3 +1,5 @@
+<!--This is the root component of Vue app. Every other component gets rendered inside it.-->
+
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
