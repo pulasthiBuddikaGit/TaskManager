@@ -1,3 +1,4 @@
+<!-- <template> – like the JSX part in React. -->
 <template>
   <div class="container">
     <!-- Left side animation -->
@@ -12,6 +13,7 @@
   </div>
 </template>
 
+<!-- <script> – like the logic and imports in React. -->
 <script>
 import SignupForm from '../components/SignupForm.vue'
 

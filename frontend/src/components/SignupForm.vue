@@ -1,9 +1,11 @@
 <template>
+                      <!-- onSubmit -->
   <form class="form" @submit.prevent="handleSubmit">
     <h2 class="title">Sign Up</h2>
 
     <div class="form-group">
       <label>Name</label>
+                        <!-- v-model is a two-way binding shortcut. -->
       <input type="text" v-model="name" required />
     </div>
 
