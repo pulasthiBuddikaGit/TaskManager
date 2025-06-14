@@ -1,4 +1,5 @@
 import './assets/main.css'
+import '@fortawesome/fontawesome-free/css/all.min.css'
 
 /*This is the entry point of your Vue app. It:
 Initializes the Vue app
