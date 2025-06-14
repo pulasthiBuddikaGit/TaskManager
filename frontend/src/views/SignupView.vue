@@ -50,6 +50,7 @@ export default {
   max-width: 450px;
 }
 
+/* media query to make the layout responsive */
 @media screen and (max-width: 1024px) {
   .container {
     flex-direction: column;
