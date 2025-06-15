@@ -7,9 +7,12 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController extends Controller
 {
+    // Register method stays exactly the same - no changes
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -18,11 +21,10 @@ class AuthController extends Controller
             'password' => 'required|string|min:6',
         ]);
 
-        //json response for validation errors
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors(),
-            ], 422); // Unprocessable Entity
+            ], 422);
         }
 
         $user = User::create([
@@ -32,44 +34,39 @@ class AuthController extends Controller
         ]);
 
         return response()->json(['message' => 'User registered successfully'], 201);
-        //return response()->json(['message' => 'User registered successfully', 'user' => $user], 201);
     }
 
+    // Updated login method with JWT
     public function login(Request $request)
     {
-        // Validate the request data
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required|string',
         ]);
 
-        // Check if validation fails and return a JSON response with errors
-        // This will return a 422 Unprocessable Entity status code with the validation errors
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors(),
             ], 422);
         }
 
-        // Check if the user exists and the password is correct
         $user = User::where('email', $request->email)->first();
 
-        // If user not found or password does not match, return a 401 Unauthorized response
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
                 'message' => 'Invalid credentials',
             ], 401);
         }
 
-        // Optional: Delete previous tokens for single device login
-        $user->tokens()->delete();
+        try {
+            // Create JWT token
+            $token = JWTAuth::fromUser($user);
+        } catch (JWTException $e) {
+            return response()->json([
+                'message' => 'Could not create token'
+            ], 500);
+        }
 
-        // Create a new token for the user and return it in the response
-        // The 'auth_token' is a name for the token, you can change it as needed
-        // The plainTextToken is the actual token string that you will use for authentication
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        // Return a JSON response with the token and user information
         return response()->json([
             'message' => 'Login successful',
             'token' => $token,
@@ -81,14 +78,37 @@ class AuthController extends Controller
         ]);
     }
 
+    // Updated logout method with JWT
     public function logout(Request $request)
     {
-        // Revoke the token that was used to authenticate the request
-        $request->user()->currentAccessToken()->delete();
-
-        // Return a JSON response indicating successful logout
-        return response()->json(['message' => 'Logged out successfully']);
+        try {
+            JWTAuth::invalidate(JWTAuth::getToken());
+            return response()->json(['message' => 'Logged out successfully']);
+        } catch (JWTException $e) {
+            return response()->json([
+                'message' => 'Failed to logout, please try again'
+            ], 500);
+        }
     }
 
+    // Additional JWT methods
+    public function me(Request $request)
+    {
+        return response()->json(auth()->user());
+    }
+
+    public function refresh()
+    {
+        try {
+            $newToken = JWTAuth::refresh(JWTAuth::getToken());
+            return response()->json([
+                'token' => $newToken
+            ]);
+        } catch (JWTException $e) {
+            return response()->json([
+                'message' => 'Token cannot be refreshed'
+            ], 401);
+        }
+    }
 }
 
