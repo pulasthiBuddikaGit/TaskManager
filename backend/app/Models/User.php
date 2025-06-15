@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use MongoDB\Laravel\Auth\User as Authenticatable;
+use Laravel\Sanctum\HasApiTokens; // ✅ Import this
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use HasApiTokens, Notifiable;
 
     protected $connection = 'mongodb'; // Specify the MongoDB connection
 
