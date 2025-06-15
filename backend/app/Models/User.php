@@ -9,7 +9,7 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    protected $connection = 'mongodb'; // Optional, but recommended
+    protected $connection = 'mongodb'; // Specify the MongoDB connection
 
     protected $fillable = [
         'name',
