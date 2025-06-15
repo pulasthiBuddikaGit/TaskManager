@@ -31,12 +31,15 @@
       <router-link to="/login">Login here</router-link>
     </p>
   </form>
+  <!-- error msg from auth.js modules -->
+  <div v-if="error" class="error-message">{{ error }}</div>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
+  name: 'SignupForm',
   data() {
     return {
       name: '',
@@ -45,18 +48,25 @@ export default {
       showPassword: false
     }
   },
+  computed: {
+    ...mapGetters('auth', ['loading', 'error'])
+  },
   methods: {
-    ...mapActions(['registerUser']),
+    ...mapActions('auth', ['register']),
+    async handleSubmit() {
+      const payload = {
+        name: this.name,
+        email: this.email,
+        password: this.password
+      }
+      await this.register(payload)
+
+      if (!this.error) {
+        this.$router.push('/login') // Redirect to login page on success
+      }
+    },
     togglePassword() {
       this.showPassword = !this.showPassword
-    },
-    async handleSubmit() {
-      try {
-        await this.registerUser({ name: this.name, email: this.email, password: this.password })
-        this.$router.push('/login')
-      } catch (err) {
-        alert(err.response?.data?.message || 'Registration failed')
-      }
     }
   }
 }
