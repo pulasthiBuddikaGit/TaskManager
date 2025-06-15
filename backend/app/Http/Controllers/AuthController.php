@@ -69,6 +69,7 @@ class AuthController extends Controller
         // The plainTextToken is the actual token string that you will use for authentication
         $token = $user->createToken('auth_token')->plainTextToken;
 
+        // Return a JSON response with the token and user information
         return response()->json([
             'message' => 'Login successful',
             'token' => $token,
