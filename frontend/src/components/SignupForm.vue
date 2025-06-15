@@ -23,8 +23,16 @@
         </span>
       </div>
     </div>
-
-    <button type="submit">Sign Up</button>
+    <!-- disable the button if loading is true and change the text on the button to Signing up...-->
+    <button
+      type="submit"
+      :disabled="loading"
+      @click="handleSubmit"
+      class="submit-button"
+    >
+      <span v-if="loading">Signing up...</span>
+      <span v-else>Sign Up</span>
+    </button>
 
     <p class="link">
       Already signed up?
@@ -116,6 +124,12 @@ button {
   font-size: 1rem;
   border-radius: 4px;
   cursor: pointer;
+}
+/* once the btn is disabled color it to a lighter shade of indigo */
+button:disabled {
+  background-color: #a5b4fc; /* Lighter indigo */
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .link {
