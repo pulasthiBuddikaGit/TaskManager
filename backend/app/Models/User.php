@@ -3,14 +3,14 @@
 namespace App\Models;
 
 use MongoDB\Laravel\Auth\User as Authenticatable;
-use Laravel\Sanctum\HasApiTokens; // ✅ Import this
 use Illuminate\Notifications\Notifiable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
-    use HasApiTokens, Notifiable;
+    use Notifiable;
 
-    protected $connection = 'mongodb'; // Specify the MongoDB connection
+    protected $connection = 'mongodb';
 
     protected $fillable = [
         'name',
@@ -22,4 +22,15 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    // JWT Methods
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
 }
