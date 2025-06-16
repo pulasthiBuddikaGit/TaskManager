@@ -9,54 +9,80 @@
     <div class="content">
       <h2 v-if="activeCategory">Tasks for {{ activeCategory.name }}</h2>
       <h2 v-else>Tasks</h2>
-
       <!-- Loading Spinner -->
       <div v-if="loading" class="spinner-container">
         <div class="spinner"></div>
       </div>
-
       <!-- Task List -->
       <div v-else class="task-list">
         <div
           v-for="task in filteredTasks"
-          :key="task._id"
+          :key="task.id"
           class="task-item"
         >
-          <h3>{{ task.heading }}</h3>
-          <p>{{ task.description }}</p>
-          <span class="status">{{ task.status }}</span>
-          <span class="priority">{{ task.priority }}</span>
+          <div class="task-content">
+            <h3>{{ task.heading }}</h3>
+            <p>{{ task.description }}</p>
+            <div class="task-meta">
+              <span class="status">{{ task.status }}</span>
+              <span class="priority">{{ task.priority }}</span>
+            </div>
+          </div>
+          <div class="task-actions">
+            <button
+              @click="openUpdateModal(task)"
+              class="update-btn"
+              :disabled="loading"
+            >
+              Update
+            </button>
+            <button
+              @click="deleteTask(task.id)"
+              class="delete-btn"
+              :disabled="loading"
+            >
+              Delete
+            </button>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- Update Task Modal -->
+    <TaskUpdateModal
+      :isOpen="showUpdateModal"
+      :task="selectedTask"
+      @close="closeUpdateModal"
+      @updated="handleTaskUpdated"
+    />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
 import Sidebar from '@/components/Sidebar.vue';
+import TaskUpdateModal from '@/components/TaskUpdateModal.vue';
 import echo from '@/echo'; // ✅ import your Echo instance
 
 export default {
   name: 'DashboardView',
-  components: { Sidebar },
+  components: { Sidebar, TaskUpdateModal },
   data() {
     return {
       activeCategory: null,
+      showUpdateModal: false,
+      selectedTask: null,
     };
   },
   computed: {
     ...mapGetters('auth', ['user']),
     ...mapGetters('categories', ['categories']),
     ...mapGetters('tasks', ['tasks', 'loading']),
-
     filteredTasks() {
       if (!this.activeCategory) {
         return this.tasks.filter((t) => !t.categoryId);
       }
-
       const activeCatId = this.activeCategory.id?.toString();
-
       return this.tasks.filter((t) => {
         const taskCatId = t.categoryId?.toString();
         return taskCatId === activeCatId;
@@ -67,27 +93,40 @@ export default {
     selectCategory(category) {
       this.activeCategory = category;
     },
-    // listenForTaskEvents() {
-    //   echo.channel('tasks')
-    //     .listen('.task.created', (e) => {
-    //       console.log('New task created:', e.task);
-    //       this.$store.commit('tasks/setTasks', [...this.tasks, e.task]);
-    //     })
-    //     .listen('.task.updated', (e) => {
-    //       console.log('Task updated:', e.task);
-    //       const updatedTasks = this.tasks.map(task =>
-    //         task._id === e.task._id ? e.task : task
-    //       );
-    //       this.$store.commit('tasks/setTasks', updatedTasks);
-    //     })
-    //     .listen('.task.deleted', (e) => {
-    //       console.log('Task deleted:', e.taskId);
-    //       const updatedTasks = this.tasks.filter(task => task._id !== e.taskId);
-    //       this.$store.commit('tasks/setTasks', updatedTasks);
-    //     });
-    // }
+    openUpdateModal(task) {
+      this.selectedTask = task;
+      this.showUpdateModal = true;
+    },
+    closeUpdateModal() {
+      this.showUpdateModal = false;
+      this.selectedTask = null;
+    },
+    handleTaskUpdated() {
+      console.log('Task updated successfully');
+      // Task list will be automatically updated via Vuex state
+    },
+    async deleteTask(taskId) {
+      if (confirm('Are you sure you want to delete this task?')) {
+        try {
+          await this.$store.dispatch('tasks/deleteTask', taskId);
+          console.log('Task deleted successfully');
+        } catch (error) {
+          console.error('Failed to delete task:', error);
 
-
+          // Check if it's a 500 error but task might still be deleted
+          if (error.response?.status === 500) {
+            console.log('Got 500 error, checking if task was actually deleted...');
+            // Wait a moment and refresh tasks to see if deletion worked
+            setTimeout(() => {
+              this.$store.dispatch('tasks/fetchTasks');
+            }, 1000);
+            alert('Delete request completed, but server returned an error. Refreshing task list...');
+          } else {
+            alert('Failed to delete task. Please try again.');
+          }
+        }
+      }
+    },
     // Listen for task events using Echo
     listenForTaskEvents() {
       echo.channel('tasks')
@@ -101,7 +140,6 @@ export default {
           this.$store.dispatch('tasks/fetchTasks');
         });
     }
-
   },
   created() {
     this.$store.dispatch('categories/fetchCategories');
@@ -135,15 +173,65 @@ export default {
   padding: 1rem;
   border-radius: 8px;
   background: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.task-content {
+  flex: 1;
+}
+
+.task-meta {
+  margin-top: 0.5rem;
 }
 
 .status,
 .priority {
   display: inline-block;
-  margin-top: 0.5rem;
   margin-right: 1rem;
   font-size: 0.9rem;
   color: #555;
+}
+
+.task-actions {
+  margin-left: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.update-btn,
+.delete-btn {
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.update-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.update-btn:hover:not(:disabled) {
+  background-color: #218838;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.delete-btn:hover:not(:disabled) {
+  background-color: #c82333;
+}
+
+.update-btn:disabled,
+.delete-btn:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
 }
 
 /* Spinner Styles */
@@ -174,6 +262,17 @@ export default {
 
   .content {
     padding: 0.5rem;
+  }
+
+  .task-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .task-actions {
+    margin-left: 0;
+    margin-top: 1rem;
+    justify-content: flex-end;
   }
 }
 </style>
