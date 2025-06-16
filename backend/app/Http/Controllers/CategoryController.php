@@ -11,10 +11,16 @@ use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
+    //I have used two different ways to fetch the user ID in here and in the TaskController.
+    //In this controller, I am using Auth::id() to get the authenticated user's ID.
+    // In the TaskController, I am using $request->user()->_id to get the authenticated user's ID.
     public function index()
     {
-        $userId = Auth::id();
-        return response()->json(Category::where('userId', $userId)->get());
+        $categories = Category::where('userId', Auth::id())
+            ->orderBy('updated_at', 'desc') // Sort by latest updated
+            ->get();
+
+        return response()->json($categories);
     }
 
     public function store(Request $request)
