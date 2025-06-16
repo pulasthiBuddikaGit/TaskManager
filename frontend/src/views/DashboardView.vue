@@ -67,25 +67,41 @@ export default {
     selectCategory(category) {
       this.activeCategory = category;
     },
+    // listenForTaskEvents() {
+    //   echo.channel('tasks')
+    //     .listen('.task.created', (e) => {
+    //       console.log('New task created:', e.task);
+    //       this.$store.commit('tasks/setTasks', [...this.tasks, e.task]);
+    //     })
+    //     .listen('.task.updated', (e) => {
+    //       console.log('Task updated:', e.task);
+    //       const updatedTasks = this.tasks.map(task =>
+    //         task._id === e.task._id ? e.task : task
+    //       );
+    //       this.$store.commit('tasks/setTasks', updatedTasks);
+    //     })
+    //     .listen('.task.deleted', (e) => {
+    //       console.log('Task deleted:', e.taskId);
+    //       const updatedTasks = this.tasks.filter(task => task._id !== e.taskId);
+    //       this.$store.commit('tasks/setTasks', updatedTasks);
+    //     });
+    // }
+
+
+    // Listen for task events using Echo
     listenForTaskEvents() {
       echo.channel('tasks')
-        .listen('.task.created', (e) => {
-          console.log('New task created:', e.task);
-          this.$store.commit('tasks/setTasks', [...this.tasks, e.task]);
+        .listen('.task.created', () => {
+          this.$store.dispatch('tasks/fetchTasks');
         })
-        // .listen('.task.updated', (e) => {
-        //   console.log('Task updated:', e.task);
-        //   const updatedTasks = this.tasks.map(task =>
-        //     task._id === e.task._id ? e.task : task
-        //   );
-        //   this.$store.commit('tasks/setTasks', updatedTasks);
-        // })
-        // .listen('.task.deleted', (e) => {
-        //   console.log('Task deleted:', e.taskId);
-        //   const updatedTasks = this.tasks.filter(task => task._id !== e.taskId);
-        //   this.$store.commit('tasks/setTasks', updatedTasks);
-        // });
+        .listen('.task.updated', () => {
+          this.$store.dispatch('tasks/fetchTasks');
+        })
+        .listen('.task.deleted', () => {
+          this.$store.dispatch('tasks/fetchTasks');
+        });
     }
+
   },
   created() {
     this.$store.dispatch('categories/fetchCategories');
