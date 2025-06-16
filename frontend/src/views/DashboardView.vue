@@ -42,13 +42,26 @@ export default {
     ...mapGetters('auth', ['user']),
     ...mapGetters('categories', ['categories']),
     ...mapGetters('tasks', ['tasks']),
+
     filteredTasks() {
       if (!this.activeCategory) {
         return this.tasks.filter((t) => !t.categoryId);
       }
-      return this.tasks.filter((t) => t.categoryId === this.activeCategory._id);
-    },
-  },
+      //selected category's ID
+      console.log('Active category ID:', this.activeCategory.id);
+
+      //compare all tasks with the selected category's ID
+      return this.tasks.filter((t) => {
+        const taskCatId = t.categoryId ? t.categoryId.toString() : null;
+        const activeCatId = this.activeCategory.id ? this.activeCategory.id.toString() : null;
+
+        console.log('Comparing:', taskCatId, '===', activeCatId);
+        return taskCatId === activeCatId;
+      });
+    }
+
+  }
+  ,
   methods: {
     selectCategory(category) {
       this.activeCategory = category;
