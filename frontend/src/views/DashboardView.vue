@@ -35,6 +35,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import Sidebar from '@/components/Sidebar.vue';
+import echo from '@/echo'; // ✅ import your Echo instance
 
 export default {
   name: 'DashboardView',
@@ -66,10 +67,31 @@ export default {
     selectCategory(category) {
       this.activeCategory = category;
     },
+    listenForTaskEvents() {
+      echo.channel('tasks')
+        .listen('.task.created', (e) => {
+          console.log('New task created:', e.task);
+          this.$store.commit('tasks/setTasks', [...this.tasks, e.task]);
+        })
+        // .listen('.task.updated', (e) => {
+        //   console.log('Task updated:', e.task);
+        //   const updatedTasks = this.tasks.map(task =>
+        //     task._id === e.task._id ? e.task : task
+        //   );
+        //   this.$store.commit('tasks/setTasks', updatedTasks);
+        // })
+        // .listen('.task.deleted', (e) => {
+        //   console.log('Task deleted:', e.taskId);
+        //   const updatedTasks = this.tasks.filter(task => task._id !== e.taskId);
+        //   this.$store.commit('tasks/setTasks', updatedTasks);
+        // });
+    }
   },
   created() {
     this.$store.dispatch('categories/fetchCategories');
-    this.$store.dispatch('tasks/fetchTasks');
+    this.$store.dispatch('tasks/fetchTasks').then(() => {
+      this.listenForTaskEvents(); // Start listening for task events
+    });
   },
 };
 </script>
