@@ -8,9 +8,15 @@
     />
     <div class="content">
       <h2 v-if="activeCategory">Tasks for {{ activeCategory.name }}</h2>
-      <h2 v-else>Inbox</h2>
+      <h2 v-else>Tasks</h2>
 
-      <div class="task-list">
+      <!-- Loading Spinner -->
+      <div v-if="loading" class="spinner-container">
+        <div class="spinner"></div>
+      </div>
+
+      <!-- Task List -->
+      <div v-else class="task-list">
         <div
           v-for="task in filteredTasks"
           :key="task._id"
@@ -41,27 +47,21 @@ export default {
   computed: {
     ...mapGetters('auth', ['user']),
     ...mapGetters('categories', ['categories']),
-    ...mapGetters('tasks', ['tasks']),
+    ...mapGetters('tasks', ['tasks', 'loading']),
 
     filteredTasks() {
       if (!this.activeCategory) {
         return this.tasks.filter((t) => !t.categoryId);
       }
-      //selected category's ID
-      console.log('Active category ID:', this.activeCategory.id);
 
-      //compare all tasks with the selected category's ID
+      const activeCatId = this.activeCategory.id?.toString();
+
       return this.tasks.filter((t) => {
-        const taskCatId = t.categoryId ? t.categoryId.toString() : null;
-        const activeCatId = this.activeCategory.id ? this.activeCategory.id.toString() : null;
-
-        console.log('Comparing:', taskCatId, '===', activeCatId);
+        const taskCatId = t.categoryId?.toString();
         return taskCatId === activeCatId;
       });
     }
-
-  }
-  ,
+  },
   methods: {
     selectCategory(category) {
       this.activeCategory = category;
@@ -108,6 +108,27 @@ export default {
   color: #555;
 }
 
+/* Spinner Styles */
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+.spinner {
+  border: 6px solid #f3f3f3;
+  border-top: 6px solid #3498db;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 @media (max-width: 768px) {
   .dashboard {
     flex-direction: column;
@@ -118,4 +139,3 @@ export default {
   }
 }
 </style>
-
