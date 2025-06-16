@@ -11,7 +11,10 @@ class TaskController extends Controller
 {
     public function index(Request $request)
     {
-        $tasks = Task::where('userId', $request->user()->_id)->get();
+        $tasks = Task::where('userId', $request->user()->_id)
+                    ->orderBy('updated_at', 'desc') // Sort by most recently updated
+                    ->get();
+
         return response()->json($tasks);
     }
 
