@@ -14,7 +14,7 @@ const mutations = {
 const actions = {
   async fetchCategories({ commit, rootGetters }) {
     const token = rootGetters['auth/token']
-    const res = await axios.get('/api/categories', {
+    const res = await axios.get('http://localhost:8000/api/categories', {
       headers: { Authorization: `Bearer ${token}` }
     })
     commit('setCategories', res.data)
