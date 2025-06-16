@@ -8,9 +8,9 @@
     <button class="add-task-btn">+ Add Task</button>
 
     <div class="nav-section">
-      <h3>Inbox</h3>
+      <h3>Tasks</h3>
       <ul>
-        <li @click="$emit('selectCategory', null)">View Inbox</li>
+        <li @click="$emit('selectCategory', null)">View Tasks</li>
       </ul>
     </div>
 
