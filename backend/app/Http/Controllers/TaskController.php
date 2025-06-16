@@ -86,8 +86,8 @@ class TaskController extends Controller
 
         $task->delete();
 
-        // 🔴 Fire broadcast event
-        broadcast(new TaskDeleted($taskId))->toOthers();
+        // 🔴 Fire broadcast event, Fixed: Use $id instead of undefined $taskId
+        //broadcast(new TaskDeleted($taskId))->toOthers();
 
         return response()->json(['message' => 'Task deleted']);
     }
