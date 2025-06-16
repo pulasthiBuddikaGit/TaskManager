@@ -97,6 +97,11 @@ class AuthController extends Controller
         return response()->json(auth()->user());
     }
 
+    //this function is used to let the user refresh their JWT token
+    // It will return a new token if the old one is still valid
+    // If the old token is invalid, it will return an error
+    // This is useful for keeping the user logged in without requiring them to log in again
+    //when user suppose to be logged in but the token is expired, they can use this endpoint to get a new token
     public function refresh()
     {
         try {
