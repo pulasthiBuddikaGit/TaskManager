@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\TaskCreated;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Task;
@@ -40,6 +41,9 @@ class TaskController extends Controller
             'userId' => $request->user()->_id,
             'categoryId' => $request->categoryId
         ]);
+
+        // 🔴 broadcast the event
+        broadcast(new TaskCreated($task))->toOthers();
 
         return response()->json($task, 201);
     }
