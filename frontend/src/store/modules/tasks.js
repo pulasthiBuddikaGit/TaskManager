@@ -14,7 +14,7 @@ const mutations = {
 const actions = {
   async fetchTasks({ commit, rootGetters }) {
     const token = rootGetters['auth/token']
-    const res = await axios.get('/api/tasks', {
+    const res = await axios.get('http://localhost:8000/api/tasks', {
       headers: { Authorization: `Bearer ${token}` }
     })
     commit('setTasks', res.data)
