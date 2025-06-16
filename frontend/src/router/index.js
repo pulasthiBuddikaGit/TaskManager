@@ -51,6 +51,7 @@ const router = createRouter({
 // This function runs before each route change
 router.beforeEach(async(to, from, next) => {
 
+  //methana tma ara user endpoint eka call karanne
     // Initialize auth on first navigation or refresh
   if (!store.getters['auth/isInitialized']) {
     try {
