@@ -1,4 +1,4 @@
-# Task Manager
+#  📋 Task Manager
 
 A full-stack task management application built with Laravel and Vue.js that provides real-time task updates and comprehensive task organization capabilities.
 
