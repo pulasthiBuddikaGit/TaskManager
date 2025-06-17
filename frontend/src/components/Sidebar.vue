@@ -25,19 +25,42 @@
         <li
           v-for="cat in categories"
           :key="cat._id"
-          @click="$emit('selectCategory', cat)"
           :class="{ active: activeCategory && activeCategory.id === cat.id }"
+          class="category-item"
         >
-          {{ cat.name }}
+          <!-- 🔴 CHANGE 1: Modified category item structure -->
+          <span @click="$emit('selectCategory', cat)" class="category-name">
+            {{ cat.name }}
+          </span>
+          <i
+            @click.stop="toggleCategoryMenu(cat)"
+            class="fas fa-ellipsis-vertical category-menu-icon"
+          ></i>
         </li>
       </ul>
     </div>
+
+    <!-- 🔴 CHANGE 2: Add CategoryActionCard component -->
+    <CategoryActionCard
+      v-if="showCategoryMenu"
+      :category="selectedCategory"
+      :position="menuPosition"
+      @close="closeCategoryMenu"
+      @delete="handleDeleteCategory"
+      @update="handleUpdateCategory"
+    />
   </aside>
 </template>
 
 <script>
+// 🔴 CHANGE 3: Import CategoryActionCard component
+import CategoryActionCard from './CategoryActionCard.vue';
+
 export default {
   name: 'Sidebar',
+  components: {
+    CategoryActionCard // 🔴 CHANGE 4: Register component
+  },
   props: {
     user: Object,
     categories: Array,
@@ -46,8 +69,66 @@ export default {
   data() {
     return {
       collapsed: false,
+      showCategoryMenu: false, // 🔴 CHANGE 5: Add menu state
+      selectedCategory: null,
+      menuPosition: { top: 0, left: 0 }
     };
   },
+  methods: {
+    // 🔴 CHANGE 6: Add category menu methods
+    toggleCategoryMenu(category) {
+      if (this.showCategoryMenu && this.selectedCategory?.id === category.id) {
+        this.closeCategoryMenu();
+      } else {
+        this.selectedCategory = category;
+        this.showCategoryMenu = true;
+
+        // Calculate menu position (you might need to adjust this based on your layout)
+        this.$nextTick(() => {
+          const event = window.event;
+          if (event) {
+            this.menuPosition = {
+              top: event.clientY,
+              left: event.clientX
+            };
+          }
+        });
+      }
+    },
+
+    closeCategoryMenu() {
+      this.showCategoryMenu = false;
+      this.selectedCategory = null;
+    },
+
+    async handleDeleteCategory(categoryId) {
+      if (confirm(`Are you sure you want to delete this category?`)) {
+        try {
+          await this.$store.dispatch('categories/deleteCategory', categoryId);
+          console.log('Category deleted successfully');
+          this.closeCategoryMenu();
+        } catch (error) {
+          console.error('Failed to delete category:', error);
+          alert('Failed to delete category. Please try again.');
+        }
+      }
+    },
+
+    handleUpdateCategory(category) {
+      // 🔴 TODO: Implement update functionality later
+      console.log('Update category:', category);
+      this.closeCategoryMenu();
+    }
+  },
+
+  // 🔴 CHANGE 7: Close menu when clicking outside
+  mounted() {
+    document.addEventListener('click', (e) => {
+      if (!this.$el.contains(e.target)) {
+        this.closeCategoryMenu();
+      }
+    });
+  }
 };
 </script>
 
@@ -59,6 +140,7 @@ export default {
   overflow-y: auto;
   transition: width 0.3s ease;
   border-right: 1px solid #ddd;
+  position: relative; /* 🔴 CHANGE 8: Add relative positioning */
 }
 
 .collapsed {
@@ -117,6 +199,43 @@ export default {
 .nav-section li.active {
   color: #0056b3;
   font-weight: 600;
+}
+
+/* 🔴 CHANGE 9: Add new styles for category items */
+.category-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  cursor: pointer;
+}
+
+.category-name {
+  flex: 1;
+  color: #007bff;
+  transition: color 0.2s;
+}
+
+.category-item:hover .category-name {
+  text-decoration: underline;
+}
+
+.category-item.active .category-name {
+  color: #0056b3;
+  font-weight: 600;
+}
+
+.category-menu-icon {
+  color: #666;
+  padding: 0.25rem;
+  border-radius: 50%;
+  transition: background-color 0.2s, color 0.2s;
+  cursor: pointer;
+}
+
+.category-menu-icon:hover {
+  background-color: #e9ecef;
+  color: #333;
 }
 
 @media (max-width: 768px) {
