@@ -1,6 +1,7 @@
 <template>
   <div class="dashboard">
     <!-- 🔴 CHANGE: Update the Sidebar component to handle updateCategory event -->
+     <!-- // 🔴 CHANGE 5: Update the Sidebar component to handle addCategory event -->
     <Sidebar
       :categories="categories"
       :user="user"
@@ -8,6 +9,7 @@
       @selectCategory="selectCategory"
       @addTask="openCreateModal"
       @updateCategory="openCategoryUpdateModal"
+      @addCategory="openCategoryCreateModal"
     />
      <!-- Add @addTask event handler to Sidebar -->
     <div class="content">
@@ -76,6 +78,14 @@
       @updated="handleCategoryUpdated"
     />
 
+    <!-- 🔴 CHANGE 6: Add CategoryCreateModal component to template (add this after CategoryUpdateModal) -->
+    <!-- Category Create Modal -->
+    <CategoryCreateModal
+      :isOpen="showCategoryCreateModal"
+      @close="closeCategoryCreateModal"
+      @created="handleCategoryCreated"
+    />
+
   </div>
 </template>
 
@@ -85,6 +95,7 @@ import Sidebar from '@/components/Sidebar.vue';
 import TaskUpdateModal from '@/components/TaskUpdateModal.vue';
 import TaskCreateModal from '@/components/TaskCreateModal.vue'; // Import TaskCreat
 import CategoryUpdateModal from '@/components/CategoryUpdateModal.vue'; // Import CategoryUpdateModal if needed
+import CategoryCreateModal from '@/components/CategoryCreateModal.vue';
 import echo from '@/echo'; // import your Echo instance
 
 export default {
@@ -93,7 +104,8 @@ export default {
     Sidebar,
     TaskUpdateModal,
     TaskCreateModal, // Add TaskCreateModal to components
-    CategoryUpdateModal // 🔴 CHANGE 2: Register CategoryUpdateModal component
+    CategoryUpdateModal, // 🔴 CHANGE 2: Register CategoryUpdateModal component
+    CategoryCreateModal // 🔴 CHANGE 2: Register CategoryCreateModal component
   },
   data() {
     return {
@@ -103,7 +115,9 @@ export default {
       showCreateModal: false, // Add showCreateModal state
             // 🔴 CHANGE 3: Add state for category update modal
       showCategoryUpdateModal: false,
-      selectedCategory: null
+      selectedCategory: null,
+            // 🔴 CHANGE 3: Add state for category create modal
+      showCategoryCreateModal: false
     };
   },
   computed: {
@@ -149,6 +163,18 @@ export default {
     },
     handleCategoryUpdated() {
       console.log('Category updated successfully');
+      // Categories list will be automatically updated via Vuex state
+    },
+
+     // 🔴 CHANGE 4: Add methods for category create modal
+    openCategoryCreateModal() {
+      this.showCategoryCreateModal = true;
+    },
+    closeCategoryCreateModal() {
+      this.showCategoryCreateModal = false;
+    },
+    handleCategoryCreated() {
+      console.log('Category created successfully');
       // Categories list will be automatically updated via Vuex state
     },
 

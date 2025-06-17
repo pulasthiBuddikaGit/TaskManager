@@ -20,7 +20,13 @@
     </div>
 
     <div class="nav-section">
-      <h3>My Categories</h3>
+      <!-- 🔴 CHANGE 1: Modified section header with flex layout for categories -->
+      <div class="section-header">
+        <h3>My Categories</h3>
+        <button @click="$emit('addCategory')" class="add-category-btn" title="Add Category">
+          +
+        </button>
+      </div>
       <ul>
         <li
           v-for="cat in categories"
@@ -58,7 +64,7 @@ import CategoryActionCard from './CategoryActionCard.vue';
 
 export default {
   name: 'Sidebar',
-  emits: ['selectCategory', 'addTask', 'updateCategory'], // 🔴 ADD: updateCategory emit
+  emits: ['selectCategory', 'addTask', 'updateCategory', 'addCategory'], // 🔴 CHANGE 2: Added 'addCategory' to emits array
   components: {
     CategoryActionCard // 🔴 CHANGE 4: Register component
   },
@@ -206,6 +212,42 @@ export default {
 .nav-section li.active {
   color: #0056b3;
   font-weight: 600;
+}
+
+/* 🔴 CHANGE 3: Added section-header class for flex layout */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+/* 🔴 CHANGE 3: Added add-category-btn styles for circular green plus button */
+.add-category-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  padding: 0;
+  line-height: 1;
+}
+
+.add-category-btn:hover {
+  background-color: #218838;
+  transform: scale(1.1);
+}
+
+.add-category-btn:active {
+  transform: scale(0.95);
 }
 
 /* 🔴 CHANGE 9: Add new styles for category items */
