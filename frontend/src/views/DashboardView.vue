@@ -5,7 +5,9 @@
       :user="user"
       :activeCategory="activeCategory"
       @selectCategory="selectCategory"
+      @addTask="openCreateModal"
     />
+     <!-- 🔴 CHANGE 1: Add @addTask event handler to Sidebar -->
     <div class="content">
       <h2 v-if="activeCategory">Tasks for {{ activeCategory.name }}</h2>
       <h2 v-else>Tasks</h2>
@@ -48,6 +50,13 @@
       </div>
     </div>
 
+        <!-- 🔴 CHANGE 2: Add TaskCreateModal component -->
+    <TaskCreateModal
+      :isOpen="showCreateModal"
+      @close="closeCreateModal"
+      @created="handleTaskCreated"
+    />
+
     <!-- Update Task Modal -->
     <TaskUpdateModal
       :isOpen="showUpdateModal"
@@ -62,16 +71,22 @@
 import { mapGetters } from 'vuex';
 import Sidebar from '@/components/Sidebar.vue';
 import TaskUpdateModal from '@/components/TaskUpdateModal.vue';
+import TaskCreateModal from '@/components/TaskCreateModal.vue'; // 🔴 CHANGE 3: Import TaskCreat
 import echo from '@/echo'; // ✅ import your Echo instance
 
 export default {
   name: 'DashboardView',
-  components: { Sidebar, TaskUpdateModal },
+  components: {
+    Sidebar,
+    TaskUpdateModal,
+    TaskCreateModal // 🔴 CHANGE 4: Add TaskCreateModal to components
+  },
   data() {
     return {
       activeCategory: null,
       showUpdateModal: false,
       selectedTask: null,
+      showCreateModal: false, // 🔴 CHANGE 5: Add showCreateModal state
     };
   },
   computed: {
@@ -93,6 +108,19 @@ export default {
     selectCategory(category) {
       this.activeCategory = category;
     },
+
+        // 🔴 CHANGE 6: Add methods for create modal
+    openCreateModal() {
+      this.showCreateModal = true;
+    },
+    closeCreateModal() {
+      this.showCreateModal = false;
+    },
+    handleTaskCreated() {
+      console.log('Task created successfully');
+      // Task list will be automatically updated via Vuex state
+    },
+
     openUpdateModal(task) {
       this.selectedTask = task;
       this.showUpdateModal = true;
