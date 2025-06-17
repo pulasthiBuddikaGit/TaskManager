@@ -123,7 +123,7 @@ const actions = {
     if (token) {
       commit('SET_TOKEN', token)
       // Fetch user data to verify token is still valid
-      dispatch('fetchUser')
+      //dispatch('fetchUser')
     }
   }
 }

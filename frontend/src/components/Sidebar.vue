@@ -20,7 +20,7 @@
     </div>
 
     <div class="nav-section">
-      <!-- 🔴 CHANGE 1: Modified section header with flex layout for categories -->
+      <!-- Modified section header with flex layout for categories -->
       <div class="section-header">
         <h3>My Categories</h3>
         <button @click="$emit('addCategory')" class="add-category-btn" title="Add Category">
@@ -34,7 +34,7 @@
           :class="{ active: activeCategory && activeCategory.id === cat.id }"
           class="category-item"
         >
-          <!-- 🔴 CHANGE 1: Modified category item structure -->
+          <!-- Modified category item structure -->
           <span @click="$emit('selectCategory', cat)" class="category-name">
             {{ cat.name }}
           </span>
@@ -46,7 +46,7 @@
       </ul>
     </div>
 
-    <!-- 🔴 CHANGE 2: Add CategoryActionCard component -->
+    <!-- Add CategoryActionCard component -->
     <CategoryActionCard
       v-if="showCategoryMenu"
       :category="selectedCategory"
@@ -55,18 +55,27 @@
       @delete="handleDeleteCategory"
       @update="handleUpdateCategory"
     />
+
+    <!--Add Logout Button -->
+    <div class="logout-section">
+      <button class="logout-btn" @click="logoutUser">
+        Logout
+      </button>
+    </div>
+
   </aside>
 </template>
 
 <script>
-// 🔴 CHANGE 3: Import CategoryActionCard component
+import { mapActions } from 'vuex'; // import mapActions
+// Import CategoryActionCard component
 import CategoryActionCard from './CategoryActionCard.vue';
 
 export default {
   name: 'Sidebar',
-  emits: ['selectCategory', 'addTask', 'updateCategory', 'addCategory'], // 🔴 CHANGE 2: Added 'addCategory' to emits array
+  emits: ['selectCategory', 'addTask', 'updateCategory', 'addCategory'], //Added 'addCategory' to emits array
   components: {
-    CategoryActionCard // 🔴 CHANGE 4: Register component
+    CategoryActionCard // Register component
   },
   props: {
     user: Object,
@@ -76,13 +85,21 @@ export default {
   data() {
     return {
       collapsed: false,
-      showCategoryMenu: false, // 🔴 CHANGE 5: Add menu state
+      showCategoryMenu: false, // Add menu state
       selectedCategory: null,
       menuPosition: { top: 0, left: 0 }
     };
   },
   methods: {
-    // 🔴 CHANGE 6: Add category menu methods
+    ...mapActions('auth', ['logout']), // map logout action
+
+        // logout method
+    async logoutUser() {
+      await this.logout();             // call the logout action
+      this.$router.push('/login');    // navigate to login page
+    },
+
+    // Add category menu methods
     toggleCategoryMenu(category) {
       if (this.showCategoryMenu && this.selectedCategory?.id === category.id) {
         this.closeCategoryMenu();
@@ -122,19 +139,19 @@ export default {
     },
 
     // handleUpdateCategory(category) {
-    //   // 🔴 TODO: Implement update functionality later
+    //   // Implement update functionality later
     //   console.log('Update category:', category);
     //   this.closeCategoryMenu();
     // }
-    // 🔴 CHANGE 1: Update the handleUpdateCategory method in methods section
+    // Update the handleUpdateCategory method in methods section
     handleUpdateCategory(category) {
-      // 🔴 CHANGE: Emit event to parent (DashboardView) to open update modal
+      // Emit event to parent (DashboardView) to open update modal
       this.$emit('updateCategory', category);
       this.closeCategoryMenu();
     }
   },
 
-  // 🔴 CHANGE 7: Close menu when clicking outside
+  // Close menu when clicking outside
   mounted() {
     document.addEventListener('click', (e) => {
       if (!this.$el.contains(e.target)) {
@@ -153,7 +170,7 @@ export default {
   overflow-y: auto;
   transition: width 0.3s ease;
   border-right: 1px solid #ddd;
-  position: relative; /* 🔴 CHANGE 8: Add relative positioning */
+  position: relative; /* Add relative positioning */
 }
 
 .collapsed {
@@ -214,7 +231,28 @@ export default {
   font-weight: 600;
 }
 
-/* 🔴 CHANGE 3: Added section-header class for flex layout */
+.logout-section {
+  margin-top: auto;
+  padding: 1rem;
+  text-align: center;
+}
+
+.logout-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #c0392b;
+}
+
+
 .section-header {
   display: flex;
   justify-content: space-between;
@@ -222,7 +260,6 @@ export default {
   margin-bottom: 0.5rem;
 }
 
-/* 🔴 CHANGE 3: Added add-category-btn styles for circular green plus button */
 .add-category-btn {
   width: 24px;
   height: 24px;
@@ -250,7 +287,6 @@ export default {
   transform: scale(0.95);
 }
 
-/* 🔴 CHANGE 9: Add new styles for category items */
 .category-item {
   display: flex;
   justify-content: space-between;
