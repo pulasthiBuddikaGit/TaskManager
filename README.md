@@ -2,7 +2,7 @@
 
 A full-stack task management application built with Laravel and Vue.js that provides real-time task updates and comprehensive task organization capabilities.
 
-## ðŸ“‹ Project Description
+## 📘‹ Project Description
 
 Task Manager is a comprehensive task management application that allows users to create, update, organize, and manage tasks with real-time updates. The application is built around three core entities: **User**, **Task**, and **Category**.
 
@@ -15,7 +15,7 @@ Task Manager is a comprehensive task management application that allows users to
 - **Authentication**: Secure JWT-based authentication system
 - **RESTful API**: Clean and well-structured REST API endpoints
 
-## ðŸš€ Setup Instructions
+## ⚙️ Setup Instructions
 
 ### Prerequisites
 
@@ -31,7 +31,7 @@ Before setting up the application, ensure you have the following installed on yo
 Since this application uses MongoDB with Laravel, you need to install the MongoDB PHP driver:
 
 1. **Download PECL MongoDB Extension**:
-   - Visit [MongoDB PHP Driver](https://www.php.net/manual/en/mongodb.installation.pecl.php)
+   - Visit [MongoDB PHP Driver](https://pecl.php.net/package/mongodb)
    - Download the appropriate PECL DLL file that matches your PHP version
    - Extract the `php_mongodb.dll` file
 
@@ -87,7 +87,7 @@ Since this application uses MongoDB with Laravel, you need to install the MongoD
    ```
    The Vue.js frontend will be available at `http://localhost:5173` (or the port shown in terminal)
 
-## ðŸ› ï¸ Technologies Used
+## 🤖 Technologies Used
 
 ### Backend:
 - **Framework**: Laravel (PHP)
@@ -106,7 +106,7 @@ Since this application uses MongoDB with Laravel, you need to install the MongoD
 - **Database Design**: ER Diagram for entity relationship planning
 - **Version Control**: Git & GitHub
 
-## ðŸ’¡ Assumptions and Development Decisions
+## 💭 Assumptions and Development Decisions
 
 ### Database Design:
 - **Entity Relationships**: Created an ER diagram to properly establish relationships between User, Task, and Category entities
@@ -126,7 +126,7 @@ Since this application uses MongoDB with Laravel, you need to install the MongoD
 - **Database Indexing**: Strategic indexing of frequently queried fields for faster lookups
 - **Real-time Optimization**: Efficient WebSocket implementation to minimize server load during real-time updates
 
-## ðŸ”— Quick Start
+## ⏩ Quick Start
 
 Once you've completed the setup instructions above, you can immediately start using the application with the pre-configured database. The application includes:
 
@@ -136,10 +136,10 @@ Once you've completed the setup instructions above, you can immediately start us
 - Real-time task updates
 - Task organization and filtering
 
-## ðŸ“ Note
+## 📝 Note
 
 The `.env` file has been intentionally committed to the repository for convenience during development and testing. In a production environment, ensure to properly secure your environment variables and database credentials.
 
 ---
 
-**Happy Task Managing! ðŸŽ¯**
+**Happy Task Managing! 🧑‍💻**
