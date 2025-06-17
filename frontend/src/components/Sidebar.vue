@@ -5,12 +5,17 @@
       <button @click="collapsed = !collapsed">☰</button>
     </div>
 
-    <button class="add-task-btn">+ Add Task</button>
+    <button @click="$emit('addTask')" class="add-task-btn">+ Add Task</button>
 
     <div class="nav-section">
       <h3>Tasks</h3>
       <ul>
-        <li @click="$emit('selectCategory', null)">View Tasks</li>
+        <li
+          @click="$emit('selectCategory', null)"
+          :class="{ active: !activeCategory }"
+        >
+          View Tasks
+        </li>
       </ul>
     </div>
 
@@ -21,6 +26,7 @@
           v-for="cat in categories"
           :key="cat._id"
           @click="$emit('selectCategory', cat)"
+          :class="{ active: activeCategory && activeCategory.id === cat.id }"
         >
           {{ cat.name }}
         </li>
@@ -70,10 +76,16 @@ export default {
   background-color: #007bff;
   border: none;
   color: white;
-  padding: 0.5rem;
+  padding: 0.75rem;
   width: 100%;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+}
+
+.add-task-btn:hover {
+  background-color: #0056b3;
 }
 
 .nav-section {
@@ -95,10 +107,16 @@ export default {
   padding: 0.5rem 0;
   cursor: pointer;
   color: #007bff;
+  transition: color 0.2s;
 }
 
 .nav-section li:hover {
   text-decoration: underline;
+}
+
+.nav-section li.active {
+  color: #0056b3;
+  font-weight: 600;
 }
 
 @media (max-width: 768px) {
