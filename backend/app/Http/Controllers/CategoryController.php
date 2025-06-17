@@ -38,7 +38,10 @@ class CategoryController extends Controller
             'userId' => Auth::id()
         ]);
 
-        return response()->json($category, 201);
+        // ✅ Return updated list of categories
+        return $this->index();
+
+        //return response()->json($category, 201);
     }
 
     public function update(Request $request, $id)
@@ -59,7 +62,10 @@ class CategoryController extends Controller
 
         $category->update(['name' => $request->name]);
 
-        return response()->json($category);
+        // ✅ Return updated list of categories
+        return $this->index();
+
+        //return response()->json($category);
     }
 
     public function destroy($id)
@@ -72,6 +78,9 @@ class CategoryController extends Controller
 
         $category->delete();
 
-        return response()->json(['message' => 'Category deleted']);
+        // ✅ Return updated list of categories
+        return $this->index();
+
+        //return response()->json(['message' => 'Category deleted']);
     }
 }
