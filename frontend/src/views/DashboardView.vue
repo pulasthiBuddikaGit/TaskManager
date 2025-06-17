@@ -1,11 +1,13 @@
 <template>
   <div class="dashboard">
+    <!-- 🔴 CHANGE: Update the Sidebar component to handle updateCategory event -->
     <Sidebar
       :categories="categories"
       :user="user"
       :activeCategory="activeCategory"
       @selectCategory="selectCategory"
       @addTask="openCreateModal"
+      @updateCategory="openCategoryUpdateModal"
     />
      <!-- Add @addTask event handler to Sidebar -->
     <div class="content">
@@ -64,6 +66,16 @@
       @close="closeUpdateModal"
       @updated="handleTaskUpdated"
     />
+
+    <!-- 🔴 CHANGE 5: Add CategoryUpdateModal component to template (add this after TaskUpdateModal) -->
+<!-- Category Update Modal -->
+    <CategoryUpdateModal
+      :isOpen="showCategoryUpdateModal"
+      :category="selectedCategory"
+      @close="closeCategoryUpdateModal"
+      @updated="handleCategoryUpdated"
+    />
+
   </div>
 </template>
 
@@ -72,6 +84,7 @@ import { mapGetters } from 'vuex';
 import Sidebar from '@/components/Sidebar.vue';
 import TaskUpdateModal from '@/components/TaskUpdateModal.vue';
 import TaskCreateModal from '@/components/TaskCreateModal.vue'; // Import TaskCreat
+import CategoryUpdateModal from '@/components/CategoryUpdateModal.vue'; // Import CategoryUpdateModal if needed
 import echo from '@/echo'; // import your Echo instance
 
 export default {
@@ -79,7 +92,8 @@ export default {
   components: {
     Sidebar,
     TaskUpdateModal,
-    TaskCreateModal // Add TaskCreateModal to components
+    TaskCreateModal, // Add TaskCreateModal to components
+    CategoryUpdateModal // 🔴 CHANGE 2: Register CategoryUpdateModal component
   },
   data() {
     return {
@@ -87,6 +101,9 @@ export default {
       showUpdateModal: false,
       selectedTask: null,
       showCreateModal: false, // Add showCreateModal state
+            // 🔴 CHANGE 3: Add state for category update modal
+      showCategoryUpdateModal: false,
+      selectedCategory: null
     };
   },
   computed: {
@@ -119,6 +136,20 @@ export default {
     handleTaskCreated() {
       console.log('Task created successfully');
       // Task list will be automatically updated via Vuex state
+    },
+
+        // 🔴 CHANGE 4: Add methods for category update modal
+    openCategoryUpdateModal(category) {
+      this.selectedCategory = category;
+      this.showCategoryUpdateModal = true;
+    },
+    closeCategoryUpdateModal() {
+      this.showCategoryUpdateModal = false;
+      this.selectedCategory = null;
+    },
+    handleCategoryUpdated() {
+      console.log('Category updated successfully');
+      // Categories list will be automatically updated via Vuex state
     },
 
     openUpdateModal(task) {

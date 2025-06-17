@@ -58,6 +58,7 @@ import CategoryActionCard from './CategoryActionCard.vue';
 
 export default {
   name: 'Sidebar',
+  emits: ['selectCategory', 'addTask', 'updateCategory'], // 🔴 ADD: updateCategory emit
   components: {
     CategoryActionCard // 🔴 CHANGE 4: Register component
   },
@@ -114,9 +115,15 @@ export default {
       }
     },
 
+    // handleUpdateCategory(category) {
+    //   // 🔴 TODO: Implement update functionality later
+    //   console.log('Update category:', category);
+    //   this.closeCategoryMenu();
+    // }
+    // 🔴 CHANGE 1: Update the handleUpdateCategory method in methods section
     handleUpdateCategory(category) {
-      // 🔴 TODO: Implement update functionality later
-      console.log('Update category:', category);
+      // 🔴 CHANGE: Emit event to parent (DashboardView) to open update modal
+      this.$emit('updateCategory', category);
       this.closeCategoryMenu();
     }
   },
