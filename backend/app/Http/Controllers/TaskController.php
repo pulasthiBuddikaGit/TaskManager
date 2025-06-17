@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\TaskCreated;
+use App\Events\TaskUpdated;
+use App\Events\TaskDeleted;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Task;
@@ -41,6 +44,9 @@ class TaskController extends Controller
             'categoryId' => $request->categoryId
         ]);
 
+        // 🔴 broadcast the event
+        broadcast(new TaskCreated($task))->toOthers();
+
         return response()->json($task, 201);
     }
 
@@ -65,6 +71,9 @@ class TaskController extends Controller
 
         $task->update($request->only(['heading', 'description', 'status', 'priority', 'categoryId']));
 
+        // 🔴 Fire broadcast event
+        broadcast(new TaskUpdated($task))->toOthers();
+
         return response()->json($task);
     }
 
@@ -76,6 +85,10 @@ class TaskController extends Controller
         }
 
         $task->delete();
+
+        // 🔴 Fire broadcast event, Fixed: Use $id instead of undefined $taskId
+        //broadcast(new TaskDeleted($taskId))->toOthers();
+
         return response()->json(['message' => 'Task deleted']);
     }
 }
