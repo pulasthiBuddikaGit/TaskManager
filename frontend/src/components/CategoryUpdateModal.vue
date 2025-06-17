@@ -22,7 +22,7 @@
           />
         </div>
 
-        <div class="form-group">
+        <!-- <div class="form-group">
           <label for="categoryDescription">Description (Optional)</label>
           <textarea
             id="categoryDescription"
@@ -32,7 +32,7 @@
             rows="3"
             :disabled="loading"
           ></textarea>
-        </div>
+        </div> -->
 
         <div class="modal-actions">
           <button
