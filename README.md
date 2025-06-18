@@ -27,7 +27,7 @@ Before setting up the application, ensure you have the following installed on yo
 3. **Composer** - [Download Composer](https://getcomposer.org/)
 4. **Git** - [Download Git](https://git-scm.com/)
 
-#### MongoDB Setup:
+#### 1.MongoDB Setup:
 Since this application uses MongoDB with Laravel, you need to install the MongoDB PHP driver:
 
 1. **Download PECL MongoDB Extension**:
@@ -41,7 +41,7 @@ Since this application uses MongoDB with Laravel, you need to install the MongoD
    - Add the following line: `extension=mongodb`
    - Restart your web server
 
-#### Fixing Common Missing Extensions (Windows Users) while running composer install:
+#### 2.Fixing Common Missing Extensions (Windows Users) while running composer install:
    If you encounter errors like:
    - `lcobucci/jwt requires ext-sodium`
    - `league/flysystem-local` or `league/mime-type-detection` require `ext-fileinfo`
@@ -63,8 +63,8 @@ Since this application uses MongoDB with Laravel, you need to install the MongoD
    - Close and reopen your terminal (or restart your web server)
    - Run `php -m` to confirm the extensions are now enabled
 
-#### Fixing SSL Certificate Error (500 Server Error):
-If you encounter a 500 server error while adding tasks or categories with the error message:
+#### 3.Fixing SSL Certificate Error (500 Server Error):
+If you encounter a 500 server error while adding tasks or categories with the error message on laravel log:
 `cURL error 60: SSL certificate problem: unable to get local issuer certificate`
 
 Follow these steps to resolve it:
