@@ -111,7 +111,7 @@ Follow these steps to resolve it:
 
 3. **Frontend Setup**:
    ```bash
-   # Navigate to frontend directory (if separate) or install from root
+   # Navigate to frontend directory and install dependencies
    npm install
    ```
 
