@@ -32,7 +32,7 @@ Since this application uses MongoDB with Laravel, you need to install the MongoD
 
 1. **Download PECL MongoDB Extension**:
    - Visit [MongoDB PHP Driver](https://pecl.php.net/package/mongodb)
-   - Download the appropriate PECL DLL file that matches your PHP version
+   - Download the appropriate PECL DLL file(Thread Safe) that matches your PHP version
    - Extract the `php_mongodb.dll` file
 
 2. **Configure PHP**:
@@ -40,6 +40,57 @@ Since this application uses MongoDB with Laravel, you need to install the MongoD
    - Open your `php.ini` file
    - Add the following line: `extension=mongodb`
    - Restart your web server
+
+#### Fixing Common Missing Extensions (Windows Users) while running composer install:
+   If you encounter errors like:
+   - `lcobucci/jwt requires ext-sodium`
+   - `league/flysystem-local` or `league/mime-type-detection` require `ext-fileinfo`
+
+   Follow these steps:
+
+   - Open your `php.ini` file (e.g., `C:\php-8.x.x\php.ini`)
+   - Find and uncomment (or add) the following lines:
+     ```
+     extension=sodium
+     extension=fileinfo
+     ```
+   - If the lines are commented (start with `;`), remove the semicolon:
+     ```ini
+     ;extension=sodium   →   extension=sodium
+     ;extension=fileinfo →   extension=fileinfo
+     ```
+   - Save the file
+   - Close and reopen your terminal (or restart your web server)
+   - Run `php -m` to confirm the extensions are now enabled
+
+#### Fixing SSL Certificate Error (500 Server Error):
+If you encounter a 500 server error while adding tasks or categories with the error message:
+`cURL error 60: SSL certificate problem: unable to get local issuer certificate`
+
+Follow these steps to resolve it:
+
+1. **Download CA Certificate Bundle**:
+   - Download the `cacert.pem` file from [curl.se/ca/cacert.pem](https://curl.se/ca/cacert.pem)
+   - Save it to `C:\php\extras\ssl\cacert.pem` (create the folders if they don't exist)
+
+2. **Configure PHP**:
+   - Open your `php.ini` file
+   - Scroll to the bottom of the file
+   - Look for these lines (they might be commented with `;`):
+     ```ini
+     ;curl.cainfo=
+     ;openssl.cafile=
+     ```
+   - Uncomment them by removing the semicolon and set the path:
+     ```ini
+     curl.cainfo="C:\php\extras\ssl\cacert.pem"
+     openssl.cafile="C:\php\extras\ssl\cacert.pem"
+     ```
+   - If you don't see these lines, simply add them at the bottom of your `php.ini` file
+   - Save the file
+   - Restart your web server
+
+---
 
 ### Installation Steps
 
@@ -64,16 +115,7 @@ Since this application uses MongoDB with Laravel, you need to install the MongoD
    npm install
    ```
 
-4. **Install All Dependencies**:
-   ```bash
-   # Backend dependencies
-   composer install
-   
-   # Frontend dependencies  
-   npm install
-   ```
-
-5. **Run the Application**:
+4. **Run the Application**:
    
    **Start the Backend Server**:
    ```bash
