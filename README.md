@@ -180,7 +180,8 @@ Once you've completed the setup instructions above, you can immediately start us
 
 ## 📝 Note
 
-The `.env` file has been intentionally committed to the repository for convenience during development and testing. In a production environment, ensure to properly secure your environment variables and database credentials.
+1. The `.env` file has been intentionally committed to the repository for convenience during development and testing. In a production environment, ensure to properly secure your environment variables and database credentials.
+2. App performance may depend on your network connection.
 
 ---
 
