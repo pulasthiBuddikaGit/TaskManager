@@ -78,7 +78,7 @@ class AuthController extends Controller
         ]);
     }
 
-    // Updated logout method with JWT
+    // Updated logout method with JWT support
     public function logout(Request $request)
     {
         try {
